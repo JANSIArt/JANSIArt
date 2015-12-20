@@ -1,34 +1,43 @@
 package ansi;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.layout.*;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class MainWIndow {
+import ansi.Controller.GUIController;
 
-	protected Shell shlJansiart;
+import java.util.Observable;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			MainWIndow window = new MainWIndow();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+public class GUIView  implements java.util.Observer {
+
+	private Shell shlJansiart;
+	private Display display;
+	public GUIView(GUIController[] listeners){
+		display = Display.getDefault();     // initialize display
+		for(int i=0;i<listeners.length;i++) // link GUI components to controllers
+			display.addFilter(listeners[i].getType(), listeners[i]);
 	}
-
+	
 	/**
 	 * Open the window.
 	 */
 	public void open() {
-		Display display = Display.getDefault();
-		createContents(display);
+		createContents();
 		shlJansiart.open();
 		shlJansiart.layout();
 		while (!shlJansiart.isDisposed()) {
@@ -37,20 +46,27 @@ public class MainWIndow {
 			}
 		}
 	}
+	
+	
+	/**
+	 * 
+	 *	Update the new content to monitor 
+	 */
+	public void update(Observable obs, Object obj) {
+	
+	}
+	
+
+
 	/**
 	 * Create contents of the window.
+	 * @wbp.parser.entryPoint
 	 */
-	protected void createContents(Display display) {
+	protected void createContents() {
 		shlJansiart = new Shell();
 		shlJansiart.setSize(559, 460);
 		shlJansiart.setText("JANSIART");
 		shlJansiart.setLayout(new GridLayout(1, false));
-		
-		display.addFilter(SWT.MouseDown, new Listener(){
-			public void handleEvent(Event e){
-				System.out.println("Get mouse!");
-			}
-		});
 		
 		Menu menu = new Menu(shlJansiart, SWT.BAR);
 		shlJansiart.setMenuBar(menu);
@@ -123,4 +139,5 @@ public class MainWIndow {
 		group_5.setLayoutData(fd_group_5);
 		group_5.setLayout(null);
 	}
+
 }
